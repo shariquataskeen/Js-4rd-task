@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Cat Images</title>
+    <style>
+        body {
+    font-family:cursive;
+    /* background-color: #ffe4e1; */
+    background-image: url(https://img.freepik.com/premium-photo/minimal-geometric-background-copy-space_1179130-412585.jpg?ga=GA1.1.2134806613.1728962710&semt=ais_hybrid);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background: #0009;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 345px;
+    color: #fff;
+}
+
+.cat-card {
+    margin-bottom: 20px;
+}
+
+.cat-card img {
+    width: 100%;
+    height: 50vh;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+#fetchCatButton {
+    background-color: orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#fetchCatButton:hover {
+    background-color: rgb(172, 131, 55);
+}
+
+@media only screen and (min-width: 360px) and (max-width: 1190px){
+    .cat-card img {
+        height: 25vh;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Random Cat Images</h1>
+        <div class="cat-card">
+            <img id="catImage" src="https://i.pinimg.com/enabled_lo/564x/f3/57/1f/f3571f850da742db03a1822ace0f412a.jpg" alt="Random Cat">
+            <p id="breedInfo">Click the button to see a random cat and its breed information.</p>
+        </div>
+        <button id="fetchCatButton">Get Random Cat</button>
+    </div>
+   <script>
+    document.getElementById('fetchCatButton').addEventListener('click', fetchCat);
+
+function fetchCat() {
+    const catImageElement = document.getElementById('catImage');
+    const breedInfoElement = document.getElementById('breedInfo');
+
+    // Fetch a random cat image with breed information
+    fetch('https://api.thecatapi.com/v1/images/search')
+        .then(response => response.json())
+        .then(data => {
+            const catData = data[0];
+            const imageUrl = catData.url;
+            catImageElement.src = imageUrl;
+
+            // Check if breed information is available
+            if (catData.breeds && catData.breeds.length > 0) {
+                const breed = catData.breeds[0];
+                breedInfoElement.textContent = `Breed: ${breed.name} - ${breed.description}`;
+            } else {
+                breedInfoElement.textContent = 'Breed information not available for this cat.';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching the cat image:', error);
+            breedInfoElement.textContent = 'Failed to load cat image. Please try again!';
+        });
+}
+
+   </script>
+</body>
+</html>
